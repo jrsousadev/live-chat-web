@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { useChat } from "../../contexts/ChatContext";
 
 import Contacts from "./Contacts";
 import InfoFriend from "./InfoFriend";
@@ -8,6 +9,8 @@ import SendMessage from "./SendMessage";
 import * as S from "./styles";
 
 const Chat = () => {
+  const { friend } = useChat();
+
   return (
     <S.ChatContainer>
       <S.LeftContainer>
@@ -16,9 +19,26 @@ const Chat = () => {
       </S.LeftContainer>
 
       <S.RightContainer>
-        <InfoFriend />
-        <Messages />
-        <SendMessage />
+        {friend && (
+          <>
+            <InfoFriend />
+            <Messages />
+            <SendMessage />
+          </>
+        )}
+        {!friend && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "80vh",
+              fontSize: "1.3rem",
+            }}
+          >
+            Select a chat
+          </div>
+        )}
       </S.RightContainer>
     </S.ChatContainer>
   );

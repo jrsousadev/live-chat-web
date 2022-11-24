@@ -10,7 +10,7 @@ export const Wallpaper = styled.div`
 export const Messages = styled.div`
   overflow-y: scroll;
 
-  height: 740px;
+  height: 820px;
 
   display: flex;
   flex-direction: column-reverse;
