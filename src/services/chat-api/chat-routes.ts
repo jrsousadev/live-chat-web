@@ -1,0 +1,1 @@
+export const GET_ALL_CHATS_BY_USER = (userId: string) => `/chat/user/${userId}`

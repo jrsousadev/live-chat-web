@@ -1,0 +1,1 @@
+export const GET_USER = (id: string) => `/user/${id}`
