@@ -5,13 +5,15 @@ import {
   useEffect,
   useCallback,
 } from "react";
-import { Message } from "../domain/Message";
+import { Message, MessagesByChat } from "../domain/Message";
 import { useUser } from "./UserContext";
 import { ContactFormated, mapFormatContactArray } from "../domain/Contact";
 import { getAllChatsByUser } from "../services/chat-api";
+import { checkForDuplicateChats } from "../utils/CheckForDuplicateChats";
 import { BASE_SOCKET_BACKEND } from "../environments/values";
 
 import io from "socket.io-client";
+import { getChatAndUpdateMessages } from "../utils/GetChatAndUpdateMessages";
 
 export type Friend = {
   chatId: string;
@@ -23,7 +25,7 @@ export type Friend = {
 type ChatContextData = {
   friend: Friend | null;
   contacts: ContactFormated[];
-  allMessages: Message[];
+  allMessages: MessagesByChat[];
 
   handleSelectFriend: (selectFriend: Friend) => void;
   handleSetNewMessage: (newMessage: AddNewMessage) => void;
@@ -45,43 +47,26 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
   const { user } = useUser();
 
   const [friend, setFriend] = useState<Friend | null>(null);
-  const [allMessages, setAllMessages] = useState<Message[]>([]);
+  const [allMessages, setAllMessages] = useState<MessagesByChat[]>([]);
 
   const [contactsMemory, setContactsMemory] = useState<ContactFormated[]>([]);
   const [contacts, setContacts] = useState<ContactFormated[]>([]);
 
-  const handleSelectFriend = useCallback((data: Friend) => {
+  const handleSelectFriend = (data: Friend) => {
     setFriend(data);
-  }, []);
+  };
 
-  const handleSetNewMessage = useCallback(
-    ({ issuer, text }: AddNewMessage) => {
-      if (typeof friend?.chatId !== "undefined") {
-        const newMessage = {
-          issuer,
-          text,
-          chatId: friend?.chatId,
-        };
+  const handleSetNewMessage = ({ issuer, text }: AddNewMessage) => {
+    const newMessage = {
+      issuer,
+      text,
+      chatId: friend?.chatId,
+    };
 
-        socket.emit("message", {
-          message: newMessage,
-        });
-      }
-    },
-    [friend?.chatId, friend?.id]
-  );
-
-  socket.on("message", (newMessage: Message) => {
-    if (
-      typeof friend?.chatId !== "undefined" &&
-      friend.chatId === newMessage.chatId
-    ) {
-      console.log('entrou')
-      const newArray = [...allMessages];
-      newArray.unshift(newMessage);
-      setAllMessages(newArray);
-    }
-  });
+    socket.emit("message", {
+      message: newMessage,
+    });
+  };
 
   useEffect(() => {
     if (typeof friend?.chatId !== "undefined") {
@@ -90,10 +75,27 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
         {
           chatId: friend?.chatId,
         },
-        (response: Message[]) => setAllMessages(response)
+        (messages: Message[]) => {
+          checkForDuplicateChats({
+            messages,
+            allMessages,
+            chatId: friend?.chatId,
+            setAllMessages,
+          });
+        }
       );
     }
-  }, [friend, handleSelectFriend]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [friend]);
+
+  socket.on("message", (newMessage: Message) => {
+    if (
+      typeof friend?.chatId !== "undefined" &&
+      friend.chatId === newMessage.chatId
+    ) {
+      getChatAndUpdateMessages({ allMessages, newMessage, setAllMessages });
+    }
+  });
 
   useEffect(() => {
     (async () => {
@@ -106,6 +108,10 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
       }
     })();
   }, [user]);
+
+  useEffect(() => {
+    console.log("allMessages: ", allMessages);
+  }, [allMessages]);
 
   const handleFilterContacts = useCallback(
     (value: string) => {

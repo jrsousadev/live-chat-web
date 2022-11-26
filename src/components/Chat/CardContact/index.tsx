@@ -18,6 +18,12 @@ interface userContact {
 }
 
 const CardContact = ({ selected, contact, ...rest }: ICardContactProps) => {
+  useEffect(() => {
+    socket.emit("select_chat", {
+      chatId: contact.id,
+    })
+  }, [])
+
   socket.on("message", (response) => {
     if (response.chatId === contact.id) {
       setLastMessage(response);

@@ -5,3 +5,9 @@ export type Message = {
     text: string;
     createdAt: Date;
 }
+
+
+export type MessagesByChat = {
+    chatId: string;
+    messages: Message[];
+}
