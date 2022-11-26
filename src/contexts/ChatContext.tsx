@@ -15,6 +15,7 @@ import io from "socket.io-client";
 
 export type Friend = {
   chatId: string;
+  id: string;
   name: string;
   image: string;
 };
@@ -25,14 +26,13 @@ type ChatContextData = {
   allMessages: Message[];
 
   handleSelectFriend: (selectFriend: Friend) => void;
-  handleSetNewMessages: (newMessage: AddNewMessage) => void;
+  handleSetNewMessage: (newMessage: AddNewMessage) => void;
   handleFilterContacts: (value: string) => void;
 };
 
 type ChatProviderProps = {
   children: React.ReactNode;
 };
-
 interface AddNewMessage {
   issuer: string;
   text: string;
@@ -50,10 +50,38 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
   const [contactsMemory, setContactsMemory] = useState<ContactFormated[]>([]);
   const [contacts, setContacts] = useState<ContactFormated[]>([]);
 
-  socket.on("message", (newMessage) => {
-    const newArray = [...allMessages];
-    newArray.unshift(newMessage);
-    setAllMessages(newArray);
+  const handleSelectFriend = useCallback((data: Friend) => {
+    setFriend(data);
+  }, []);
+
+  const handleSetNewMessage = useCallback(
+    ({ issuer, text }: AddNewMessage) => {
+      if (typeof friend?.chatId !== "undefined") {
+        const newMessage = {
+          issuer,
+          text,
+          recipient: friend?.id,
+          chatId: friend?.chatId,
+        };
+
+        socket.emit("message", {
+          message: newMessage,
+        });
+      }
+    },
+    [friend?.chatId, friend?.id]
+  );
+
+  socket.on("message", (newMessage: Message) => {
+    if (
+      typeof friend?.chatId !== "undefined" &&
+      friend.chatId === newMessage.chatId &&
+      friend.id === newMessage.recipient
+    ) {
+      const newArray = [...allMessages];
+      newArray.unshift(newMessage);
+      setAllMessages(newArray);
+    }
   });
 
   useEffect(() => {
@@ -66,7 +94,7 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
         (response: Message[]) => setAllMessages(response)
       );
     }
-  }, [friend]);
+  }, [friend, handleSelectFriend]);
 
   useEffect(() => {
     (async () => {
@@ -79,27 +107,6 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
       }
     })();
   }, [user]);
-
-  const handleSelectFriend = useCallback((data: Friend) => {
-    setFriend(data);
-  }, []);
-
-  const handleSetNewMessages = useCallback(
-    ({ issuer, text }: AddNewMessage) => {
-      if (typeof friend?.chatId !== "undefined") {
-        const newMessage = {
-          issuer,
-          text,
-          chatId: friend?.chatId,
-        };
-
-        socket.emit("message", {
-          message: newMessage,
-        });
-      }
-    },
-    [friend?.chatId]
-  );
 
   const handleFilterContacts = useCallback(
     (value: string) => {
@@ -129,7 +136,7 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
         friend,
         allMessages,
         handleSelectFriend,
-        handleSetNewMessages,
+        handleSetNewMessage,
         handleFilterContacts,
       }}
     >

@@ -19,6 +19,7 @@ const Contacts = () => {
       image: userContact?.image ?? "",
       name: userContact?.name ?? "",
       chatId: id,
+      id: userContact?.id ?? "",
     });
   };
 

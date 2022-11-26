@@ -5,7 +5,7 @@ import * as S from "./styles";
 
 const SendMessage = () => {
   const { user } = useUser();
-  const { handleSetNewMessages } = useChat();
+  const { handleSetNewMessage } = useChat();
   const [newMessage, setNewMessage] = useState("");
 
   const handleSendNewMessage = () => {
@@ -14,7 +14,7 @@ const SendMessage = () => {
     }
 
     if (typeof user?.id !== "undefined") {
-      handleSetNewMessages({
+      handleSetNewMessage({
         text: newMessage,
         issuer: user.id,
       });
