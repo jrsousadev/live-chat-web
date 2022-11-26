@@ -1,4 +1,4 @@
-const ENVIRONMENT = process.env.ENVIRONMENT as string;
+const ENVIRONMENT = process.env.ENVIRONMENT || "PROD";
 
 const BASE_URL_BACKEND =
   ENVIRONMENT === "PROD"
