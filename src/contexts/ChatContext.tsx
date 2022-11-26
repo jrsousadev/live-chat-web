@@ -73,11 +73,17 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
   );
 
   socket.on("message", (newMessage: Message) => {
+    console.log('Mensagem recebida')
+    console.log('antes: ', newMessage);
+
+    console.log(friend?.chatId);
+    console.log(friend?.id);
     if (
       typeof friend?.chatId !== "undefined" &&
       friend.chatId === newMessage.chatId &&
       friend.id === newMessage.recipient
     ) {
+      console.log('entrou')
       const newArray = [...allMessages];
       newArray.unshift(newMessage);
       setAllMessages(newArray);
