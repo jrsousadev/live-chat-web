@@ -60,7 +60,6 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
         const newMessage = {
           issuer,
           text,
-          recipient: friend?.id,
           chatId: friend?.chatId,
         };
 
@@ -73,15 +72,9 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
   );
 
   socket.on("message", (newMessage: Message) => {
-    console.log('Mensagem recebida')
-    console.log('antes: ', newMessage);
-
-    console.log(friend?.chatId);
-    console.log(friend?.id);
     if (
       typeof friend?.chatId !== "undefined" &&
-      friend.chatId === newMessage.chatId &&
-      friend.id === newMessage.recipient
+      friend.chatId === newMessage.chatId
     ) {
       console.log('entrou')
       const newArray = [...allMessages];

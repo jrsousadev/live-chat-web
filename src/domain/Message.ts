@@ -4,5 +4,4 @@ export type Message = {
     chatId: string;
     text: string;
     createdAt: Date;
-    recipient: string;
 }
