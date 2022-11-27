@@ -11,9 +11,10 @@ import { ContactFormated, mapFormatContactArray } from "../domain/Contact";
 import { getAllChatsByUser } from "../services/chat-api";
 import { checkForDuplicateChats } from "../utils/CheckForDuplicateChats";
 import { BASE_SOCKET_BACKEND } from "../environments/values";
+import { getChatAndUpdateMessages } from "../utils/GetChatAndUpdateMessages";
+import { StepMobile } from "../constants/StepMobile";
 
 import io from "socket.io-client";
-import { getChatAndUpdateMessages } from "../utils/GetChatAndUpdateMessages";
 
 export type Friend = {
   chatId: string;
@@ -24,12 +25,14 @@ export type Friend = {
 
 type ChatContextData = {
   friend: Friend | null;
+  stepMobile: number | null;
   contacts: ContactFormated[];
   allMessages: MessagesByChat[];
 
   handleSelectFriend: (selectFriend: Friend) => void;
   handleSetNewMessage: (newMessage: AddNewMessage) => void;
   handleFilterContacts: (value: string) => void;
+  handleToggleStepMobile: (step: number) => void;
 };
 
 type ChatProviderProps = {
@@ -52,6 +55,8 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
   const [contactsMemory, setContactsMemory] = useState<ContactFormated[]>([]);
   const [contacts, setContacts] = useState<ContactFormated[]>([]);
 
+  const [stepMobile, setStepMobile] = useState<number | null>(null);
+
   const handleSelectFriend = (data: Friend) => {
     setFriend(data);
   };
@@ -67,6 +72,16 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
       message: newMessage,
     });
   };
+
+  const handleToggleStepMobile = (step: number) => {
+    setStepMobile(step);
+  };
+
+  useEffect(() => {
+    if (window.innerWidth <= 1000) {
+      setStepMobile(StepMobile.CONTACTS);
+    }
+  }, []);
 
   useEffect(() => {
     if (typeof friend?.chatId !== "undefined") {
@@ -137,12 +152,14 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
   return (
     <ChatContext.Provider
       value={{
+        stepMobile,
         contacts,
         friend,
         allMessages,
         handleSelectFriend,
         handleSetNewMessage,
         handleFilterContacts,
+        handleToggleStepMobile,
       }}
     >
       {children}

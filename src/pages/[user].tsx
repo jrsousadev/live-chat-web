@@ -1,30 +1,8 @@
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { memo, useEffect, useState } from "react";
 import { useUser } from "../contexts/UserContext";
-
+import { Button, Container, ContainerAnotherUser } from "../styles/pages/user";
 import Chat from "../components/Chat";
-import styled from "styled-components";
-
-export const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100vw;
-`;
-
-export const Button = styled.button`
-  background-color: #c23660;
-  border-radius: 5px;
-  padding: 0.3rem;
-  color: #ffffff;
-
-  transition: all 0.3s;
-
-  &:hover {
-    opacity: 0.8;
-  }
-`;
 
 interface IUsersMemory {
   name: string;
@@ -51,14 +29,8 @@ const Home = () => {
 
   return (
     <Container>
-      <div
-        style={{
-          display: "grid",
-          marginRight: "5px",
-          color: "#ffffff",
-        }}
-      >
-        <p style={{ marginBottom: "10px" }}>Select another user</p>
+      <ContainerAnotherUser>
+        <p className="titleSelectAnotherUser">Select another user</p>
         {users.map(
           (userData, index) =>
             userData.id !== user?.id && (
@@ -70,8 +42,7 @@ const Home = () => {
               </Button>
             )
         )}
-      </div>
-
+      </ContainerAnotherUser>
       <Chat />
     </Container>
   );
