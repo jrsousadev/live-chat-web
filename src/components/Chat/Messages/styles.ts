@@ -5,6 +5,8 @@ export const Wallpaper = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+
+  height: 75vh;
 `;
 
 export const Messages = styled.div`
