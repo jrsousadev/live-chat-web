@@ -15,6 +15,17 @@ export const InfoFriend = styled.div<InfoFriendProps>`
   align-items: center;
   grid-gap: 10px;
 
+  .iconBack {
+    display: none;
+    align-items: center;
+    cursor: pointer;
+
+    @media (max-width: 1000px) {
+      display: flex;
+    }
+
+  }
+
   .image {
     clip-path: circle();
     width: 50px;

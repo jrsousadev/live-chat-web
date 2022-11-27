@@ -1,8 +1,6 @@
 import * as S from "./styles";
 import moment from "moment";
-
 import { memo } from "react";
-
 interface IMessageBody {
   itIsMe: boolean;
   message: string;

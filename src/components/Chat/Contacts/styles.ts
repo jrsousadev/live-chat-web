@@ -14,7 +14,7 @@ export const Contacts = styled.div`
   }
 
   .containerContacts {
-    height: 700px;
+    height: 100%;
 
     &::-webkit-scrollbar {
       width: 5px;

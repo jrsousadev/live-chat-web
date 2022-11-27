@@ -9,16 +9,16 @@ import SendMessage from "./SendMessage";
 import * as S from "./styles";
 
 const Chat = () => {
-  const { friend } = useChat();
+  const { friend, stepMobile, handleToggleStepMobile } = useChat();
 
   return (
     <S.ChatContainer>
-      <S.LeftContainer>
+      <S.LeftContainer stepMobile={stepMobile}>
         <Me />
         <Contacts />
       </S.LeftContainer>
 
-      <S.RightContainer>
+      <S.RightContainer stepMobile={stepMobile}>
         {friend && (
           <>
             <InfoFriend />

@@ -1,13 +1,13 @@
 import { memo, useState } from "react";
+import { StepMobile } from "../../../constants/StepMobile";
 import { useChat } from "../../../contexts/ChatContext";
 import { ContactFormated } from "../../../domain/Contact";
-
 import CardContact from "../CardContact";
 
 import * as S from "./styles";
 
 const Contacts = () => {
-  const { contacts } = useChat();
+  const { contacts, stepMobile, handleToggleStepMobile } = useChat();
 
   const [selected, setSelected] = useState<string>("");
 
@@ -21,6 +21,10 @@ const Contacts = () => {
       chatId: id,
       id: userContact?.id ?? "",
     });
+
+    if (stepMobile) {
+      handleToggleStepMobile(StepMobile.CHAT)
+    }
   };
 
   return (

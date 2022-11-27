@@ -10,7 +10,7 @@ export const Wallpaper = styled.div`
 export const Messages = styled.div`
   overflow-y: scroll;
 
-  height: 820px;
+  height: 100%;
 
   display: flex;
   flex-direction: column-reverse;
@@ -21,16 +21,16 @@ export const Messages = styled.div`
   padding-left: 1rem;
 
   &::-webkit-scrollbar {
-    width: 5px; /* width of the entire scrollbar */
+    width: 5px;
   }
 
   &::-webkit-scrollbar-track {
-    background: transparent; /* color of the tracking area */
+    background: transparent;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: #A5A8AF; /* color of the scroll thumb */
-    border-radius: 20px; /* roundness of the scroll thumb */
-    border: 1px solid transparent; /* creates padding around scroll thumb */
+    background-color: #A5A8AF; 
+    border-radius: 20px;
+    border: 1px solid transparent;
   }
 `;
