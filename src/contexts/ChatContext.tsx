@@ -124,10 +124,6 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
     })();
   }, [user]);
 
-  useEffect(() => {
-    console.log("allMessages: ", allMessages);
-  }, [allMessages]);
-
   const handleFilterContacts = useCallback(
     (value: string) => {
       if (value.length <= 0) return setContacts(contactsMemory);

@@ -9,7 +9,7 @@ import SendMessage from "./SendMessage";
 import * as S from "./styles";
 
 const Chat = () => {
-  const { friend, stepMobile, handleToggleStepMobile } = useChat();
+  const { friend, stepMobile } = useChat();
 
   return (
     <S.ChatContainer>
@@ -26,7 +26,7 @@ const Chat = () => {
             <SendMessage />
           </>
         )}
-        {!friend && (
+        {!friend && !stepMobile && (
           <div
             style={{
               display: "flex",
