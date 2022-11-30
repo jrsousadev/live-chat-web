@@ -5,16 +5,37 @@ interface IMessageBody {
   itIsMe: boolean;
   message: string;
   data: Date;
+  isGroup?: boolean;
+  issuerName?: string;
 }
 
-export const MessageBody = ({ itIsMe, message, data }: IMessageBody) => {
+export const MessageBody = ({
+  itIsMe,
+  message,
+  data,
+  isGroup,
+  issuerName,
+}: IMessageBody) => {
   return (
-    <S.Message itIsMe={itIsMe}>
-      <div>
-        <p className="message">{message}</p>
-        <p className="data">{moment(data).format("MMM DD | HH:mm")}</p>
-      </div>
-    </S.Message>
+    <>
+      {!isGroup && (
+        <S.MessageUser itIsMe={itIsMe}>
+          <div>
+            <p className="message">{message}</p>
+            <p className="data">{moment(data).format("MMM DD | HH:mm")}</p>
+          </div>
+        </S.MessageUser>
+      )}
+      {isGroup && (
+        <S.MessageGroup itIsMe={itIsMe}>
+          <div>
+            {!itIsMe && <p className="nameUser">{issuerName ?? ""}</p>}
+            <p className="message">{message}</p>
+            <p className="data">{moment(data).format("MMM DD | HH:mm")}</p>
+          </div>
+        </S.MessageGroup>
+      )}
+    </>
   );
 };
 
