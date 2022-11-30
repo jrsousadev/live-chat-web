@@ -10,10 +10,10 @@ interface IUsersMemory {
 }
 
 const usersMemory = [
-  { name: "Junior Sousa", id: "637d9d6fcaeea7b8cd7d7fed" },
-  { name: "Amelia Mary", id: "637d9f168592ea71390b10b6" },
-  { name: "Oliver James", id: "637e814a51f3338344cf26ea" },
-  { name: "Emily Jennifer", id: "637e814e51f3338344cf26eb" },
+  { name: "Junior", id: "637d9d6fcaeea7b8cd7d7fed" },
+  { name: "Homer", id: "637d9f168592ea71390b10b6" },
+  { name: "Bart", id: "637e814a51f3338344cf26ea" },
+  { name: "Lisa", id: "637e814e51f3338344cf26eb" },
 ];
 
 const Home = () => {
