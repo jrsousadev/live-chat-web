@@ -2,7 +2,9 @@ import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { memo, useEffect, useState } from "react";
 import { useUser } from "../contexts/UserContext";
 import { Button, Container, ContainerAnotherUser } from "../styles/pages/user";
+
 import Chat from "../components/Chat";
+import Head from "next/head";
 
 interface IUsersMemory {
   name: string;
@@ -28,23 +30,29 @@ const Home = () => {
   }, [user]);
 
   return (
-    <Container>
-      <ContainerAnotherUser>
-        <p className="titleSelectAnotherUser">Select another user</p>
-        {users.map(
-          (userData, index) =>
-            userData.id !== user?.id && (
-              <Button
-                key={index}
-                onClick={() => window.open(`/${userData.id}`, "_blank")}
-              >
-                {userData.name}
-              </Button>
-            )
-        )}
-      </ContainerAnotherUser>
-      <Chat />
-    </Container>
+    <>
+      <Head>
+        <title>Chat - {`${user?.name ?? ""}`}</title>
+      </Head>
+    
+      <Container>
+        <ContainerAnotherUser>
+          <p className="titleSelectAnotherUser">Select another user</p>
+          {users.map(
+            (userData, index) =>
+              userData.id !== user?.id && (
+                <Button
+                  key={index}
+                  onClick={() => window.open(`/${userData.id}`, "_blank")}
+                >
+                  {userData.name}
+                </Button>
+              )
+          )}
+        </ContainerAnotherUser>
+        <Chat />
+      </Container>
+    </>
   );
 };
 
