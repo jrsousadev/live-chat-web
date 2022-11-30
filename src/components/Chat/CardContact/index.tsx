@@ -21,8 +21,8 @@ const CardContact = ({ selected, contact, ...rest }: ICardContactProps) => {
   useEffect(() => {
     socket.emit("select_chat", {
       chatId: contact.id,
-    })
-  }, [])
+    });
+  }, []);
 
   socket.on("message", (response) => {
     if (response.chatId === contact.id) {
@@ -46,20 +46,39 @@ const CardContact = ({ selected, contact, ...rest }: ICardContactProps) => {
 
   return (
     <>
-      <S.Card
-        imageUser={userContact?.image ?? ""}
-        selected={selected}
-        {...rest}
-      >
-        <div className="image"></div>
-        <div className="nameAndMessage">
-          <p className="name">{userContact?.name}</p>
-          <p className="lastMessage">{lastMessage?.text}</p>
-        </div>
-        <div className="lastDateMessage">
-          {moment(lastMessage?.createdAt).format("MMM DD")}
-        </div>
-      </S.Card>
+      {contact.isGroup && (
+        <S.Card
+          image={contact.groupImage ?? ""}
+          selected={selected}
+          {...rest}
+        >
+          <div className="image"></div>
+          <div className="nameAndMessage">
+            <p className="name">{contact.groupName}</p>
+            <p className="lastMessage">{lastMessage && `${lastMessage?.user?.name}: ${lastMessage.text}`}</p>
+          </div>
+          <div className="lastDateMessage">
+            {lastMessage && moment(lastMessage?.createdAt).format("MMM DD")}
+          </div>
+        </S.Card>
+      )}
+
+      {!contact.isGroup && (
+        <S.Card
+          image={userContact?.image ?? ""}
+          selected={selected}
+          {...rest}
+        >
+          <div className="image"></div>
+          <div className="nameAndMessage">
+            <p className="name">{userContact?.name}</p>
+            <p className="lastMessage">{lastMessage?.text}</p>
+          </div>
+          <div className="lastDateMessage">
+            {lastMessage && moment(lastMessage?.createdAt).format("MMM DD")}
+          </div>
+        </S.Card>
+      )}
     </>
   );
 };

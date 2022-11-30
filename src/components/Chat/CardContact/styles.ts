@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 type CardProps = {
-  imageUser: string;
+  image: string;
   selected: boolean;
 };
 
@@ -24,7 +24,7 @@ export const Card = styled.div<CardProps>`
     clip-path: circle();
     width: 45px;
     height: 45px;
-    background-image: ${(props) => `url(${props.imageUser})`};
+    background-image: ${(props) => `url(${props.image})`};
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
