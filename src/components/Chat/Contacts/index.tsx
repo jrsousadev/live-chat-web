@@ -11,19 +11,34 @@ const Contacts = () => {
 
   const [selected, setSelected] = useState<string>("");
 
-  const { handleSelectFriend } = useChat();
+  const { handleSelectFriendOrGroup } = useChat();
 
-  const handleGetFriendId = ({ id, userContact }: ContactFormated) => {
-    setSelected(id);
-    handleSelectFriend({
-      image: userContact?.image ?? "",
-      name: userContact?.name ?? "",
-      chatId: id,
-      id: userContact?.id ?? "",
-    });
+  const handleGetFriendId = (data: ContactFormated) => {
+    setSelected(data.id);
+
+    if (data.isGroup) {
+      handleSelectFriendOrGroup({
+        image: data?.groupImage ?? "",
+        name: data?.groupName ?? "",
+        chatId: data.id,
+        id: "",
+        users: data.users,
+        isGroup: true,
+      });
+    }
+
+    if (!data.isGroup) {
+      handleSelectFriendOrGroup({
+        image: data?.userContact?.image ?? "",
+        name: data?.userContact?.name ?? "",
+        chatId: data.id,
+        id: data?.userContact?.id ?? "",
+        isGroup: false
+      });
+    }
 
     if (stepMobile) {
-      handleToggleStepMobile(StepMobile.CHAT)
+      handleToggleStepMobile(StepMobile.CHAT);
     }
   };
 

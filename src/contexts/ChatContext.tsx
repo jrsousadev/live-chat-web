@@ -6,14 +6,15 @@ import {
   useCallback,
 } from "react";
 import { Message, MessagesByChat } from "../domain/Message";
-import { useUser } from "./UserContext";
-import { ContactFormated, mapFormatContactArray } from "../domain/Contact";
+import { User, useUser } from "./UserContext";
+import { ContactFormated, IContact } from "../domain/Contact";
 import { getAllChatsByUser } from "../services/chat-api";
 import { checkForDuplicateChats } from "../utils/CheckForDuplicateChats";
 import { BASE_SOCKET_BACKEND } from "../environments/values";
 import { getChatAndUpdateMessages } from "../utils/GetChatAndUpdateMessages";
 import { StepMobile } from "../constants/StepMobile";
 
+import Contact from "../domain/Contact";
 import io from "socket.io-client";
 
 export type Friend = {
@@ -21,6 +22,8 @@ export type Friend = {
   id: string;
   name: string;
   image: string;
+  users?: User[];
+  isGroup: boolean;
 };
 
 type ChatContextData = {
@@ -29,7 +32,7 @@ type ChatContextData = {
   contacts: ContactFormated[];
   allMessages: MessagesByChat[];
 
-  handleSelectFriend: (selectFriend: Friend) => void;
+  handleSelectFriendOrGroup: (selectFriendOrGroup: Friend) => void;
   handleSetNewMessage: (newMessage: AddNewMessage) => void;
   handleFilterContacts: (value: string) => void;
   handleToggleStepMobile: (step: number) => void;
@@ -52,12 +55,12 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
   const [friend, setFriend] = useState<Friend | null>(null);
   const [allMessages, setAllMessages] = useState<MessagesByChat[]>([]);
 
-  const [contactsMemory, setContactsMemory] = useState<ContactFormated[]>([]);
-  const [contacts, setContacts] = useState<ContactFormated[]>([]);
+  const [contactsMemory, setContactsMemory] = useState<any[]>([]);
+  const [contacts, setContacts] = useState<any[]>([]);
 
   const [stepMobile, setStepMobile] = useState<number | null>(null);
 
-  const handleSelectFriend = (data: Friend) => {
+  const handleSelectFriendOrGroup = (data: Friend) => {
     setFriend(data);
   };
 
@@ -116,7 +119,7 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
     (async () => {
       if (user?.id) {
         const result = await getAllChatsByUser(user.id);
-        const resultFormated = mapFormatContactArray(result);
+        const resultFormated = Contact.mapFormatContactArray(result);
 
         setContacts(resultFormated);
         setContactsMemory(resultFormated);
@@ -152,7 +155,7 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
         contacts,
         friend,
         allMessages,
-        handleSelectFriend,
+        handleSelectFriendOrGroup,
         handleSetNewMessage,
         handleFilterContacts,
         handleToggleStepMobile,

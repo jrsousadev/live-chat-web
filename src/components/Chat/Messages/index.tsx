@@ -26,6 +26,8 @@ const Messages = () => {
                     itIsMe={message.issuer === user?.id}
                     data={message.createdAt}
                     message={message.text}
+                    isGroup={friend.isGroup}
+                    issuerName={message?.user?.name ?? ""}
                   />
                 ))}
               </>
