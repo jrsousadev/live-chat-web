@@ -6,8 +6,9 @@ Project inspired by WhatsApp
 
 - React
 - Next
-- Mui
 - Styled Components
+- Axios
+- Socket.io
 
 ### Link Repository API (Back-end)
 
